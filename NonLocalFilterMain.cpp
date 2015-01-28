@@ -8,8 +8,6 @@
 
 #include "NonLocalFilter.hpp"
 
-
-
 /*
 Example of data format: 2 rows, 4 columns, 3 channels
 
@@ -25,24 +23,23 @@ Example of data format: 2 rows, 4 columns, 3 channels
 1 2 3 4
 5 6 7 8
 
-
 */
-
-
-
-
-
 
 int wmain(int argc, wchar_t* argv[])
 {
    if (argc < 4)
    {
+      std::wcout << L"Usage: \t" << argv[0] << L" <input file> <output file> <sigma : float >" <<
+                     " [mode : default(0) | skip itself(1) | skip overlapped(2) | skip center(4)] " << std::endl;
    }
    else
    {
       std::wstring inFileName = argv[1];
       std::wstring outFileName = argv[2];
       float sigma = (float)std::wcstod(argv[3], NULL);
+      unsigned int mode = (unsigned int)NLF_ns::eDefault;
+      if (argc == 5)
+         mode = (unsigned int)std::wcstol(argv[4],NULL,0);  
       
       std::ifstream inD = std::ifstream();
       inD.open(inFileName, std::ifstream::in);
@@ -74,7 +71,7 @@ int wmain(int argc, wchar_t* argv[])
 
       // Data is read
       
-      NLF(pInput, pOutput, rows, columns, channels, sigma);
+      NLF_ns::NLF(pInput, pOutput, rows, columns, channels, sigma, mode/* , &std::wcout */);
 
 
       std::ofstream outD = std::ofstream();
